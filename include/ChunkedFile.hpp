@@ -1,11 +1,20 @@
+#ifndef CHUNKED_FILE_H_
+#define CHUNKED_FILE_H_
+
 #include <cstddef>
 #include <vector>
+#include <memory>
 
 
 class ChunkedFile {
 public:
-    ChunkedFile();
-    std::vector<unsigned char> GetBody();
+    ChunkedFile(size_t size);
+    unsigned char* GetBody();
+    size_t GetBodySize();
+
 private:
-    std::vector<unsigned char> body;
+    std::unique_ptr<unsigned char[]> body;
+    size_t body_size;
 };
+
+#endif
