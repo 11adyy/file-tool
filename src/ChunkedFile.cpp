@@ -19,11 +19,11 @@ size_t ChunkedFile::GetBodySize() {
 }
 
 int ChunkedFile::Lock() {
-    lock_ = 1;
+    lock_++;
     return lock_;
 }
 
 int ChunkedFile::Unlock() {
-    lock_ = 0;
+    lock_--;
     return lock_;
 }
