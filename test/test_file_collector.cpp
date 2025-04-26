@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "FileCollector.hpp"
+#include "../include/FileCollector.hpp"
 #include <thread>
 #include <vector>
 #include <cstring>
