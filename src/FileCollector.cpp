@@ -11,8 +11,10 @@ int FileCollector::OnNewChunk(unsigned int file_id, size_t offset, std::vector<u
     unsigned int chunk_size = chunk.size();
     ChunkedFile* file = FileCollector::GetFile(file_id);
     if (file) {
+        file->Lock();
         unsigned char* file_body = file->GetBody();
         std::copy(chunk.begin(), chunk.end(), file_body + offset);
+        file->Unlock();
         return 1;
     }
 
