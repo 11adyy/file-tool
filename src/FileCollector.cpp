@@ -9,7 +9,9 @@ int FileCollector::CollectFile(unsigned int file_id, size_t file_size) {
 int FileCollector::OnNewChunk(unsigned int file_id, size_t offset, std::vector<unsigned char>&& chunk) {
     unsigned int start = offset;
     unsigned int chunk_size = chunk.size();
-    ChunkedFile* file = FileCollector::GetFile(file_id);
+    ChunkedFile* file = GetFile(file_id);
+    while (file->TestSaveLock()) continue;
+
     if (file) {
         file->Lock();
         unsigned char* file_body = file->GetBody();

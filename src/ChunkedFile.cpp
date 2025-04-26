@@ -8,22 +8,46 @@ unsigned char* ChunkedFile::GetBody() {
 }
 
 int ChunkedFile::SaveFile(const char* path) {
-    while (lock_) continue;
-    std::ofstream output(path);
-    output << body_ << std::endl;
-    output.close();
+    while (TestLock()) continue;
+    int fd = open(path, O_WRONLY | O_CREAT);
+    if (fd < 0) return 0;
+    if (pwrite(fd, body_.get(), body_size_, 0) != body_size_) {
+        close(fd);
+        return 0;
+    }
+
+    close(fd);
+    return 1;
 }
 
 size_t ChunkedFile::GetBodySize() {
     return body_size_;
 }
 
+int ChunkedFile::LockSave() {
+    save_lock_ = 1;
+    return 1;
+}
+
+int ChunkedFile::UnlockSave() {
+    save_lock_ = 0;
+    return 1;
+}
+
+int ChunkedFile::TestSaveLock() {
+    return save_lock_;
+}
+
 int ChunkedFile::Lock() {
     lock_++;
-    return lock_;
+    return 1;
 }
 
 int ChunkedFile::Unlock() {
     lock_--;
+    return 1;
+}
+
+int ChunkedFile::TestLock() {
     return lock_;
 }
