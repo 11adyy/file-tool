@@ -11,7 +11,7 @@ int ChunkedFile::SaveFile(const char* path) {
     while (TestLock()) continue;
     int fd = open(path, O_WRONLY | O_CREAT);
     if (fd < 0) return 0;
-    if (pwrite(fd, body_.get(), body_size_, 0) != body_size_) {
+    if (pwrite(fd, GetBody(), body_size_, 0) != body_size_) {
         close(fd);
         return 0;
     }
